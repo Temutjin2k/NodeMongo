@@ -3,11 +3,15 @@ const express = require('express')
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
    
-const blogScheme = new Schema({
-    title: { type: String, required: true },
-    body: { type: String, required: true },
-    author: { type: String, required: true },
-    },{timestamps: true }
+const blogScheme = new Schema(
+    {
+        title: { type: String, required: true },
+        body: { type: String, required: true },
+        author: { type: String, required: true }
+    },
+    {
+        timestamps: true
+    }
 );
 
 const Blog = mongoose.model("blog", blogScheme);
@@ -18,11 +22,21 @@ app.use(express.json())
 app.post("/blogs", async (req, res) => {
     if(!req.body) return res.status(400).json({error: "no body provided"});
 
+    const {title, body, author} = req.body;
+
+    if (!title){
+        return res.status(400).json({error: "title is not provided"});
+    }else if (!body){
+        return res.status(400).json({error: "body is not provided"});
+    }else if (!author){
+        return res.status(400).json({error: "author is not provided"});
+    }
+
     const blog = new Blog(
         {   
-            title: req.body.title, 
-            body: req.body.body, 
-            author: req.body.author
+            title: title, 
+            body: body, 
+            author: author
         })
 
     await blog.save()
@@ -47,7 +61,17 @@ app.put("/blogs/:id", async (req, res) => {
     if (!blog) res.status(400).json({ error: "Blog does not exist"})
     
     const {title, body, author} = req.body;
-    if (blog.title == title || blog.body == body || blog.author == author){
+
+    if (!title){
+        return res.status(400).json({error: "title is not provided"});
+    }else if (!body){
+        return res.status(400).json({error: "body is not provided"});
+    }else if (!author){
+        return res.status(400).json({error: "author is not provided"});
+    }
+
+
+    if (blog.title == title && blog.body == body && blog.author == author){
         return res.status(400).json({ error: "No changes were made" })
     }
 
@@ -67,24 +91,17 @@ app.delete("/blogs/:id", async (req, res) => {
 
 
 
-async function main() {
+async function ConnectDB() {
     try{
         await mongoose.connect(process.env.MONGO_URI);
-        const PORT = process.env.PORT
-        app.listen(PORT, () => {
-            console.log(`ListenAndServe: http://localhost:${PORT}/`)
-        });
-    }
-    catch(err) {
+    }catch(err) {
         return console.log(err);
     }
 }
 
-main();
+ConnectDB();
 
-// Something like Gracefull shutdown
-process.on("SIGINT", async() => {
-    await mongoose.disconnect();
-    console.log("Shutting down server");
-    process.exit();
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+    console.log(`ListenAndServe: http://localhost:${PORT}/`)
 });
