@@ -1,0 +1,24 @@
+{
+  "name": "nodemongo",
+  "version": "1.0.0",
+  "description": "Assignment 4 Building a CRUD API with Node.js and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Temutjin2k/NodeMongo.git"
+  },
+  "author": "Temutjin2k",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Temutjin2k/NodeMongo/issues"
+  },
+  "homepage": "https://github.com/Temutjin2k/NodeMongo#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.7"
+  }
+}
