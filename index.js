@@ -18,6 +18,7 @@ const Blog = mongoose.model("blog", blogScheme);
 
 const app = express()
 app.use(express.json())
+app.use(express.static("web"))
 
 app.post("/blogs", async (req, res) => {
     if(!req.body) return res.status(400).json({error: "no body provided"});
